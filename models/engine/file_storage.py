@@ -11,7 +11,11 @@ class FileStorage():
     __objects = {}
 
     classes = {"BaseModel": BaseModel,
-               "User": User}
+               "User": User,
+               "State": State,
+               "City": City, "Amenity": Amenity,
+               "Place": Place,
+               "Review": Review}
 
     def all(self):
         """Returns a dictionary containing objects"""
@@ -37,6 +41,8 @@ class FileStorage():
             with open(FileStorage.__file_path, "r") as file:
                 obj = json.load(file)
                 dicto = {}
+                for cle, valeur in obj.items():
+                    dicto[cle] = self.classes[valeur["__class__"]](**valeur)
                 FileStorage.__objects = dicto
         else:
             return
