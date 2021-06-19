@@ -12,27 +12,27 @@ class HBNBCommand(cmd.Cmd):
     """ HBNBCommand Class"""
     prompt = "(hbnb)"
     classes = {"BaseModel": BaseModel,
-               "User": User}
+               "User": User,
+               "State": State,
+               "City": City, "Amenity": Amenity,
+               "Place": Place,
+               "Review": Review}
 
     def do_quit(self, args):
-        """Quit command to exit the program
-        """
+        """Quit command to exit the program"""
         return True
 
     def do_EOF(self, args):
-        """EOF command to exit the program
-        """
+        """EOF command to exit the program"""
         print()
         return True
 
     def emptyline(self):
-        """[empty line]
-        """
+        """empty line"""
         pass
 
     def default(self, line):
-        """default method
-        """
+        """default method"""
         lista = (line.replace('(', '.').replace(',', '.').replace(' ', '')
                [:-1].split('.'))
         if len(lista) > 1:
@@ -67,9 +67,9 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
         else:
-            b = HBNBCommand.classes[args[0]]()
-            b.save()
-            print(b.id)
+            bm = HBNBCommand.classes[args[0]]()
+            bm.save()
+            print(bm.id)
 
     def do_show(self, args):
         """Show command print the dict format of instance
@@ -92,8 +92,7 @@ class HBNBCommand(cmd.Cmd):
             print(_all["{}.{}".format(args.split()[0], args.split()[1])])
 
     def do_destroy(self, args):
-        """Destroy command By ID
-        """
+        """Destroy created instance"""
         arg = args.split()
         _all = storage.all()
         if not arg:
@@ -117,18 +116,18 @@ class HBNBCommand(cmd.Cmd):
             all instances based or not on the class name
         """
         args = args.split()
-        lst = []
+        lista = []
         if args and args[0] not in HBNBCommand.classes.keys():
             print("** class doesn't exist **")
         elif not args:
-            for i in storage.all().values():
-                lst.append(str(i))
+            for c in storage.all().values():
+                lista.append(str(c))
         else:
-            for i in storage.all().values():
-                if args[0] == i.__class__.__name__:
-                    lst.append(str(i))
-        if len(lst):
-            print(lst)
+            for c in storage.all().values():
+                if args[0] == c.__class__.__name__:
+                    lista.append(str(c))
+        if len(lista):
+            print(lista)
 
     def do_update(self, args):
         """Update command for resetting user attributes
