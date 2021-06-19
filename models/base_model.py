@@ -2,6 +2,7 @@
 """BaseModel Module"""
 import uuid
 from datetime import datetime
+from models import storage
 
 
 class BaseModel():
@@ -18,6 +19,9 @@ class BaseModel():
                     v = datetime.strptime(v, format_time)
                 if k != "__class__":
                     setattr(self, k, v)
+        else:
+            storage.new(self)
+
     def __str__(self):
         """ Str format"""
         return "[{}] ({}) ({})".format(self.__class__.__name__,
@@ -26,6 +30,7 @@ class BaseModel():
     def save(self):
         """ Changes the instance updated_at"""
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """Dictionary format"""
