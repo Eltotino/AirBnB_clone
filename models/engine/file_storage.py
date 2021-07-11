@@ -1,7 +1,8 @@
 #!/usr/bin/python3
-"""FileStorage class"""
-import json
+"""[FileStorage class]
+"""
 from os import path
+import json
 from models.base_model import BaseModel
 from models.user import User
 from models.state import State
@@ -10,9 +11,11 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 
+
 class FileStorage():
-    """FileStorage"""
-    __file_path = "fichier.json"
+    """[FileStorage]
+    """
+    __file_path = "file.json"
     __objects = {}
 
     classes = {"BaseModel": BaseModel,
@@ -23,31 +26,39 @@ class FileStorage():
                "Review": Review}
 
     def all(self):
-        """Returns a dictionary containing objects"""
+        """[all]
+        Returns:
+            [dict]: [dictionnary containing objects]
+        """
         return FileStorage.__objects
 
     def new(self, obj):
-        """Sets the obj with obj to be created"""
+        """[new]
+        Args:
+            obj ([object]): [object to be created]
+        """
         _id = obj.id
-        k = str(obj.__class__.__name__) + "." + _id
-        FileStorage.__objects[k] = obj
+        key = str(obj.__class__.__name__) + "." + _id
+        FileStorage.__objects[key] = obj
 
     def save(self):
-        """serialises object to json file"""
-        dicto = {}
-        with open(FileStorage.__file_path, "w", encoding='utf-8') as file:
-            for cle, valeur in FileStorage.__objects.items():
-                dicto[cle] = valeur.to_dict()
-            json.dump(dicto, file)
+        """[save]
+        """
+        dct = {}
+        with open(FileStorage.__file_path, "w", encoding="utf-8") as f:
+            for k, v in FileStorage.__objects.items():
+                dct[k] = v.to_dict()
+            json.dump(dct, f, indent=4)
 
     def reload(self):
-        """Deserialises json file to object"""
+        """[reload]
+        """
         if path.isfile(FileStorage.__file_path):
-            with open(FileStorage.__file_path, "r") as file:
-                obj = json.load(file)
-                dicto = {}
-                for cle, valeur in obj.items():
-                    dicto[cle] = self.classes[valeur["__class__"]](**valeur)
-                FileStorage.__objects = dicto
+            with open(FileStorage.__file_path, "r") as f:
+                obj = json.load(f)
+                dct = {}
+                for k, v in obj.items():
+                    dct[k] = self.classes[v["__class__"]](**v)
+                FileStorage.__objects = dct
         else:
             return
